@@ -1,0 +1,1 @@
+# Wizy JavaScript Skeleton 
