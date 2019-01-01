@@ -7,9 +7,7 @@ export const weatherController = {
   },
   async getWeatherByID(req, res) {
     const { extID } = req.params;
-    console.log('extID', extID);
     const weather = await WeatherServices().getOne({ extId: Number.parseInt(extID) });
-    console.log('weather', weather);
     res.ok({ success: true, result: weather });
   }
 };
