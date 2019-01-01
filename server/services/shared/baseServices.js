@@ -1,5 +1,5 @@
 import { getDB } from '../../db';
-import { ObjectId, ObjectID } from 'mongodb';
+import { ObjectId } from 'mongodb';
 
 export const BaseServices = collectionName => {
   return {

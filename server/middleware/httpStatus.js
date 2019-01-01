@@ -7,7 +7,7 @@ export const httpStatus = (req, res, next) => {
   };
 
   // http code: 400
-  res.badRequest = function (message) {
+  res.badRequest = function(message) {
     return res.status(400).json({
       error: {
         code: 400,

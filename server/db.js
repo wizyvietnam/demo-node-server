@@ -10,28 +10,34 @@ let state = {
 let client = null;
 
 export const initDB = () => {
-  return co(function* () {
+  return co(function*() {
     // Connection URL
     let url = DATABASE.urlConnection;
     if (process.env.NODE_ENV === 'test') {
       try {
         // Connection URL for unit test
-        const mongod = new MongodbMemoryServer({ 
+        const mongod = new MongodbMemoryServer({
           binary: {
-          version: '3.6.0',
-          downloadDir: './mongodb-binaries'
+            version: '3.6.0',
+            downloadDir: './mongodb-binaries'
           }
         });
         url = yield mongod.getConnectionString();
-        client = yield MongoClient.connect(url, { useNewUrlParser: true });
+        client = yield MongoClient.connect(
+          url,
+          { useNewUrlParser: true }
+        );
         const dbName = yield mongod.getDbName();
         state.db = client.db(dbName);
       } catch (e) {
         console.log('init MongodbMemoryServer err: ', e);
       }
-    }else {
+    } else {
       // Use connect method to connect to the Server
-      client = yield MongoClient.connect(url, { useNewUrlParser: true });
+      client = yield MongoClient.connect(
+        url,
+        { useNewUrlParser: true }
+      );
       const index = url.lastIndexOf('/');
       const dbName = url.substring(index + 1);
       state.db = client.db(dbName);
@@ -49,7 +55,7 @@ export const dropDB = () => {
 
 export const closeDB = () => {
   if (state.db) {
-    client.close(function () {
+    client.close(function() {
       state.db = null;
     });
   }
@@ -60,7 +66,5 @@ export const getCollectionNames = () => {
 };
 
 export const addSchemaValidation = () => {
-  return co(function* () {
-    
-  });
+  return co(function*() {});
 };
