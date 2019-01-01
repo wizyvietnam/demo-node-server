@@ -30,7 +30,7 @@ export const initDB = () => {
         const dbName = yield mongod.getDbName();
         state.db = client.db(dbName);
       } catch (e) {
-        console.log('init MongodbMemoryServer err: ', e);
+        console.log('init MongodbMemoryServer err: ', e); // eslint-disable-line
       }
     } else {
       // Use connect method to connect to the Server

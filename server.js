@@ -1,4 +1,4 @@
-import * as env from './env';
+import * as env from './env'; // eslint-disable-line
 import express from 'express';
 import path from 'path';
 
@@ -37,7 +37,7 @@ if (process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'test') {
     .then(() => {
       dropDB();
     })
-    .then(result => {
+    .then(() => {
       console.log('Dropped DB');
       console.log('Added schema validation');
       importData();
