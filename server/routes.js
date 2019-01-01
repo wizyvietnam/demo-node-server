@@ -1,9 +1,9 @@
 import { Router } from 'express';
 
-import { indexController } from './controllers/indexController';
+import { weatherController } from './controllers/weatherController';
 
 const routes = new Router();
 
-routes.get('/result', indexController.getIndex);
+routes.get('/weathers', weatherController.getAllWeather);
 
 export default routes;
