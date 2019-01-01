@@ -1,9 +1,5 @@
 .DS_Store
 /node_modules
-client/node_modules
-
-# production
-client/build
 
 # misc
 client/.DS_Store

@@ -1,40 +1,73 @@
 import * as env from './env';
-import express from "express";
-import bodyParser from "body-parser";
-import cors from "cors";
-import fs from "fs";
-import { httpStatus } from "./server/middleware/httpStatus";
-import { noCache } from "./server/middleware/nocache";
-import path from "path";
-import routes from "./server/routes";
+import express from 'express';
+import path from 'path';
 
-export const app = express();
+import httpContext from 'express-http-context';
+import { httpStatus, corsHandler, forceHttps } from './server/middleware/index';
 
-app.use(bodyParser.json());
-app.use(httpStatus);
-app.use(cors());
-app.use(noCache);
+import routes from './server/routes';
+import { initDB, dropDB } from './server/db';
+import { importData } from './server/importData';
+import { API } from './server/settings';
 
-// Router
-app.use("/api", routes); // Handle API routes. For testing: /api/result
+export const app = express(),
+  bodyParser = require('body-parser'),
+  port = API.port;
 
+const jsonParser = bodyParser.json();
 
-// Routing for client static requests
-// app.use(
-//   "/static",
-//   express.static(path.join(__dirname, "client", "build", "static"))
-// );
-// app.use("/images", express.static(path.join(__dirname, "client", "build", "images")));
-// app.get("*", (request, response, next) => {
-//   const data = fs.readFileSync(
-//     path.join(__dirname, "client", "build", "index.html"),
-//     "utf8"
-//   );
-//   response.send(data);
-//   next();
-// });
+app.use(bodyParser.json({ limit: '50mb' })); // For fixing unit tests (Load all questions)
+app.use(bodyParser.urlencoded({ limit: '50mb', extended: true })); // For fixing unit tests
 
-let port = process.env.PORT || 3001;
-app.listen(port, () => {
-  console.log("server is running on port", port);
-});
+app.use(jsonParser);
+app.use(forceHttps);
+app.use(httpContext.middleware);
+app.use(corsHandler);
+app.use(httpStatus); // This middleware have to run before routes
+
+app.use('/api', routes);
+
+app.use(
+  '/favicon.ico',
+  express.static(path.join(__dirname, 'client/build/favicon.ico'))
+);
+
+if (process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'test') {
+  initDB()
+    .then(() => {
+      dropDB();
+    })
+    .then(result => {
+      console.log('Dropped DB');
+      console.log('Added schema validation');
+      importData();
+    })
+    .then(() => {
+      console.log('Import data successfully');
+      app.listen(port, () => {
+        app.emit('appStarted');
+        console.log('listening at port: ', port);
+      });
+    })
+    .catch(err => {
+      console.log('ImportData err: ', JSON.stringify(err));
+    })
+    .catch(err => {
+      console.log('Dropping DB fail because of ' + JSON.stringify(err));
+    });
+} else {
+  initDB()
+    .then(() => {
+      importData();
+    })
+    .then(() => {
+      console.log('Import data successfully');
+      app.listen(port, () => {
+        app.emit('appStarted');
+        console.log('listening at port: ', port);
+      });
+    })
+    .catch(err => {
+      console.log('ImportData err: ', JSON.stringify(err));
+    });
+}
