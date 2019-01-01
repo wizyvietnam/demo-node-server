@@ -24,6 +24,7 @@ export const BaseServices = collectionName => {
     // GET ELEMENT WITH A SEARCH CONDITIONS
     getOne(queryFind = {}) {
       delete queryFind.version;
+      console.log(queryFind);
       return new Promise((resolve, reject) => {
         getDB()
           .collection(collectionName)
