@@ -3,6 +3,7 @@ import co from 'co';
 import weatherData from './init-data/weather.json';
 
 import { WeatherServices } from './services/weatherService';
+import { Weather } from './models/weather';
 
 export const importData = () => {
   return co(function*() {
@@ -18,7 +19,10 @@ export const importJSONData = {
         if (result.length === 0) {
           let array = Object.values(weatherData);
           return Promise.all(
-            array.map(element => WeatherServices().create(element))
+            array.map(element => {
+              const weather = Weather(element);
+              WeatherServices().create(weather);
+            })
           );
         } else {
           return null;
