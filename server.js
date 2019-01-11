@@ -14,6 +14,8 @@ export const app = express(),
   bodyParser = require('body-parser'),
   port = API.port;
 
+// This is change for server.js
+
 const jsonParser = bodyParser.json();
 
 app.use(bodyParser.json({ limit: '50mb' })); // For fixing unit tests (Load all questions)
