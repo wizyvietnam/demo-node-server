@@ -10,6 +10,8 @@ import { initDB, dropDB } from './server/db';
 import { importData } from './server/importData';
 import { API } from './server/settings';
 
+// This is demo change for node server
+
 export const app = express(),
   bodyParser = require('body-parser'),
   port = API.port;
