@@ -8,6 +8,7 @@ if (!NODE_ENV) {
 }
 
 // This is demo change for env.js file
+// This is another change for env.js
 
 let dotenvFiles = [`${process.cwd()}/.env.${NODE_ENV}`].filter(Boolean);
 
