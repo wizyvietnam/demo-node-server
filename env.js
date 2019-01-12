@@ -7,6 +7,8 @@ if (!NODE_ENV) {
   process.env.NODE_ENV = 'development';
 }
 
+// This is demo change for env.js file
+
 let dotenvFiles = [`${process.cwd()}/.env.${NODE_ENV}`].filter(Boolean);
 
 dotenvFiles.forEach(dotenvFile => {
